@@ -1,0 +1,23 @@
+Section: StartofMatch
+##### This is a comment line
+
+This is a partition_demo
+    - "destination"  
+My IP is 140.142.1.41
+VLAN1091            64:87:88:e1:82:4d   D   -   et-0/1/0.0             0         0
+VLAN1091            64-87-88-e1-82-4d   D   -   et-0/1/0.0             0         0
+VLAN1091            6487:88e1:824d      D   -   et-0/1/0.0             0         0
+VLAN1091            6487-88e1-824d      D   -   et-0/1/0.0             0         0
+EndofSection
+
+Section: StartofSplit
+set protocols bgp group   To_Remote_vtep type internal
+server:140.142.41.100
+EndofSection
+
+Section: StartofReplace
+This is my first demo
+(10.10.10.1)
+njb-esw-ha-b-B20.amc.uwmedicine.org
+    indented line
+##### EndofSection
