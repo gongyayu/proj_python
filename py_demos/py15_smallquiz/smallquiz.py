@@ -194,5 +194,12 @@ def py_listquizes():
     st_code(code_print(''))   
 ### EndofCodeSection###
 
+def py_fstr():
+    num = 255
+    s1 = f"{num:x}"
+    s2 = f"{num:X}"
+    st_code(f"s1: {s1}, s2: {s2}")
+### EndofCodeSection###
+
 
 

@@ -80,3 +80,52 @@ def py_iterdir():
     st_code(f"pathlib.path.iterdir(): {entrylist} \n\ndir(entry): {dir(entry)}")
 ### EndofCodeSection###
 
+def pysearchforfiles():
+    foundlist = []
+    cnt = 0
+    searchfor = input("Search for: ")
+    for fname in os.listdir('/Volumes/192.168.1.57/music'):
+        if re.search(r'{}'.format(searchfor).lower(), fname.lower()):
+            foundlist.append(fname)
+            cnt += 1
+    if len(foundlist) > 0:
+        for each in foundlist:
+            print(each)
+        print(f"Total: {cnt}")
+    else:
+        print(f"Nothing found.")
+### EndofCodeSection###
+
+def pylistallfiles():
+    import os
+    import re
+    import pathlib
+
+    def listfiles():
+        dirs = get_all_directories('/Volumes/192.168.1.57/Topics/AI/')
+        index_file = '/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes.md'
+
+        with open(index_file,'w') as fh:
+            for d in dirs:           
+                dir_path = pathlib.Path(d)
+                idx = 1
+                filelist = []
+                for entry in dir_path.iterdir(): 
+                    if entry.is_file():
+                        filelist.append(entry.name)
+                if len(filelist) > 0:
+                    fh.write(f"#### {d}\n")
+                    for idx,fn in enumerate(sorted(filelist), start=1):
+                        fh.write(f"{idx}. {fn}\n")  
+                        
+
+        def get_all_directories(start_folder):
+            """Return all directories recursively from a starting folder."""
+            directories = []
+            for root, dirs, files in os.walk(start_folder):
+                for d in dirs:
+                    directories.append(os.path.join(root, d))
+            return directories
+### EndofCodeSection###
+
+
