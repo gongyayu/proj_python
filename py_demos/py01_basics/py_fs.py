@@ -104,6 +104,7 @@ def pylistallfiles():
     def listfiles():
         dirs = get_all_directories('/Volumes/192.168.1.57/Topics/AI/')
         index_file = '/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes.md'
+        keyword = 'RAG'
 
         with open(index_file,'w') as fh:
             for d in dirs:           
@@ -112,7 +113,11 @@ def pylistallfiles():
                 filelist = []
                 for entry in dir_path.iterdir(): 
                     if entry.is_file():
-                        filelist.append(entry.name)
+                        if keywork == None:
+                            filelist.append(entry.name)
+                        else:
+                            if re.search(r'{}'.format(keyword), entry.name)
+                                filelist.append(entry.name)
                 if len(filelist) > 0:
                     fh.write(f"#### {d}\n")
                     for idx,fn in enumerate(sorted(filelist), start=1):

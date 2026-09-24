@@ -201,5 +201,14 @@ def py_fstr():
     st_code(f"s1: {s1}, s2: {s2}")
 ### EndofCodeSection###
 
+def py_while_else():
+    n = 3
+    while n > 0:
+        n -= 1
+    else:
+        code_print(f"done")
+    st_code(f"{code_print(f'')}{n}")
+### EndofCodeSection###
+
 
 
