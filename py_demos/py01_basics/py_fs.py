@@ -5,32 +5,37 @@ from py_mod import line_print, st_print, st_code, code_print, st_markline
 from pprint import pformat
 
 ### StartofFunc###
-def py_directory():
-    def pydirectory():
-            import os
-            # folder operation
-            folder = '/users/gongya/Programming/mac_python/'
-            # check if a folder exists
-            if os.path.exists(folder):
-                st_code(f"'{folder}' exists")
-            else:
-                st_code(f"{folder} does not exist")
-    
-    def pymkdir():
-            try:
-                path = os.getcwd() + '/data/out/'
-                new_folder = path + 'test_folder'
-                # os.makedirs('output', exist_ok=True), not to raise an exception if the directory already exists.
-                os.makedirs(new_folder)
-                st_code(f"successful to make a folder '{new_folder}'")
-            except Exception as e:
-                st_code(f"Error: {str(e)}")
-    pydirectory()
-    st_markline()
-    pymkdir()
-### EndofCodeSection###
-    
+def py_fspkg():
+    import os
+    import pathlib
 
+    code_print(f"os.getcwd: {os.getcwd()}")  
+    code_print(f"os.listdir('.'): {os.listdir('.')}")
+
+    for root, dirs, files in os.walk('./data'):
+        code_print(f"root: {root}, dirs: {dirs}, files: {files}")     
+    code_print(f"os.makedirs('./data/out/test_folder', exist_ok=True): {os.makedirs('./data/out/test_folder', exist_ok=True)}")
+    
+    code_print(f"{'-' * 30 }")
+    code_print(f"os.path: {os.path} \ndir(os.path): {dir(os.path)}")
+    # the directory where the current script runs. vs. getcwd() which returns the current working directory of the main script
+    code_print(f"os.path.dirname(__file__): {os.path.dirname(__file__)}")              
+    code_print(f"os.path.abspath('.'): {os.path.abspath('.')}")
+    code_print(f"os.path.exists('./data'): {os.path.exists('./data')}")
+    
+    code_print(f"{'-' * 30 }")
+    code_print(f"pathlib.Path(os.path.dirname(__file__)): {pathlib.Path(os.path.dirname(__file__))}")
+    # return a list of names of the entries in the directory given by the path
+    code_print(f"pathlib.Path('.').iterdir(): {list(pathlib.Path('.').iterdir())}")
+    entrylist = []
+    for entry in pathlib.Path('.').iterdir():
+        entrylist.append(entry)
+    code_print(f"\npathlib.path('.').iterdir(): {entrylist} \n\nentry: {entry}, type: {type(entry)} \n\ndir(entry): {dir(entry)}")
+    
+    st_code(f"{code_print(f'')}")
+### EndofCodeSection###
+
+    
 def py_files():
     def pyglob():
         import glob
@@ -45,42 +50,8 @@ def py_files():
     pyglob()
 ### EndofCodeSection###
 
-def py_path():
-    def pydirname():
-        # the directory where the current script runs
-        # dirname() vs. dir() which returns a list of names (attributes and methods) of an object.
-        # /Users/gongya/Programming/mac_python/proj_python/py_demos/py01_bas/py_fs.py
-        st_code(f"os.path.dirname(__file__): {os.path.dirname(__file__)}")
-
-    def pycwd():
-        # the directory where the main script runs
-        st_code(f"os.getcwd: {os.getcwd()}")
-    pydirname()
-    st_markline()
-    pycwd()
-### EndofCodeSection###
-
-
-def py_listdir():
-    entryList = []
-    for entry in os.listdir():
-        entryList.append(entry)
-    st_code(f"os.listdir(): {os.listdir()}, \n\ndir(entry): {dir(entry)}")
-### EndofCodeSection###
-
-
-def py_iterdir():
-    # return a list of names of the entries in the directory given by the path
-    entrylist = []
-    dir_path = pathlib.Path('.')   
-    st_code(f"pathlib.Path('.'): {dir_path}")
-
-    for entry in dir_path.iterdir():
-        entrylist.append(entry)
-    st_code(f"pathlib.path.iterdir(): {entrylist} \n\ndir(entry): {dir(entry)}")
-### EndofCodeSection###
-
 def pysearchforfiles():
+    import re
     foundlist = []
     cnt = 0
     searchfor = input("Search for: ")
@@ -113,10 +84,10 @@ def pylistallfiles():
                 filelist = []
                 for entry in dir_path.iterdir(): 
                     if entry.is_file():
-                        if keywork == None:
+                        if keyword == None:
                             filelist.append(entry.name)
                         else:
-                            if re.search(r'{}'.format(keyword), entry.name)
+                            if re.search(r'{}'.format(keyword), entry.name):
                                 filelist.append(entry.name)
                 if len(filelist) > 0:
                     fh.write(f"#### {d}\n")
@@ -128,9 +99,73 @@ def pylistallfiles():
             """Return all directories recursively from a starting folder."""
             directories = []
             for root, dirs, files in os.walk(start_folder):
+                dirs[:] = [d for d in dirs if not d.startswith('.')]   # exclude dir starting with dot
                 for d in dirs:
                     directories.append(os.path.join(root, d))
             return directories
 ### EndofCodeSection###
 
+def py_filesize():
+    import os
 
+    def get_folder_size(folder):
+        total_bytes = 0
+        # through the folder
+        for root, dirs, files in os.walk(folder):
+            #print(root, dirs, files)
+            for filename in files:
+                file_path = os.path.join(root, filename)
+                # whether a file or not
+                if os.path.isfile(file_path):
+                    total_bytes = os.path.getsize(file_path)
+                    # to MB
+                    total_mb = total_bytes / 1024 / 1024
+                    code_print(f"the size of the file {(file_path)}: {total_bytes} bytes, {total_mb: .2f} MB")
+        st_code(f"{code_print(f'')}")
+        return total_mb
+
+    target_dir = "./data"
+    if os.path.exists(target_dir):
+        get_folder_size(target_dir)
+    else:
+        st_code(f"{target_dir} does not exists !")
+### EndofCodeSection###
+
+def pyarrangefiles():
+    import os
+    import shutil
+
+    def arrange_files_by_extension(source_folder, destination_folder):
+        if not os.path.exists(destination_folder):
+            os.makedirs(destination_folder)
+
+        for filename in os.listdir(source_folder):
+            file_path = os.path.join(source_folder, filename)
+            if os.path.isfile(file_path):
+                file_extension = os.path.splitext(filename)[1][1:]  # Get the extension without the dot
+                if file_extension:  # Only proceed if there is an extension
+                    ext_folder = os.path.join(destination_folder, file_extension)
+                    if not os.path.exists(ext_folder):
+                        os.makedirs(ext_folder)
+                    shutil.move(file_path, os.path.join(ext_folder, filename))
+                    code_print(f"Moved {filename} to {ext_folder}")
+
+    source_dir = "./data"
+    dest_dir = "./data/organized"
+    arrange_files_by_extension(source_dir, dest_dir)
+    st_code(f"{code_print(f'')}")
+
+    file_type_map = {
+        'Images': ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'],
+        'Documents': ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx'],
+        'Audio': ['mp3', 'wav', 'aac', 'flac'],
+        'Video': ['mp4', 'avi', 'mkv', 'mov'],
+        # Add more categories and extensions as needed
+    }
+
+    def get_file_category(extension):
+        for category, extensions in file_type_map.items():
+            if extension.lower() in extensions:
+                return category
+        return 'Others'
+### EndofCodeSection###

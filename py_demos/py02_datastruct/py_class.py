@@ -308,3 +308,20 @@ def py_person_class():
     for key in person_info.keys():
         st_code(f"getattr(person, key): {getattr(person, key)}")
 ### EndofCodeSection###
+
+def py_class_quiz1():
+    # In Python, __enter__ is a special method used to create context managers (objects that work with the with statement).
+    # It executes setup code when entering the with block and optionally returns a value assigned to the as variable. It must be paired with an __exit__ method.
+    class MyContext:
+        def __enter__(self):
+            print("enter")
+            return self
+        def __exit__(self, exc_type, exc_val,exc_tb):
+            print("exit")
+            return(False,False,False)
+    with MyContext():
+        print("working")
+        raise ValueError("Error")
+
+    print("findished")
+### EndofCodeSection###

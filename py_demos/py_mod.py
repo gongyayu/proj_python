@@ -3,11 +3,17 @@ import os
 import re
 import streamlit as st
 import importlib
+#
+# for py99_files
+#
+import pathlib
+from datetime import datetime, timezone,timedelta
+import time
 
 
 options = False
 debug = False
-non_topic_list = ['py_data', '__pycache__', 'data']
+non_topic_list = ['py_data', '__pycache__', 'data','__init__']
 _st = True
 outlines = codelines = ''
 py_proj_path = '/Users/gongya/Programming/mac_python/proj_python/py_demos/'
@@ -17,10 +23,38 @@ llm_model = 'gpt-oss:latest'
 ollama_model = 'llama3.1:8b'
 ollama_URL = "http://localhost:11434/api/chat"
 
-# demo variables
+#
+# files stats
+#
+startfrom = {
+    'AI':['/Volumes/192.168.1.57/AI/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/AI_Indexes.md'],
+    'proj_python':['/Users/gongya/Programming/mac_python/proj_python/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/Python_Indexes.md'],
+    'uv_python':['/Users/gongya/Programming/uv_python/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/Pythonuv_Indexes.md'],
+    'proj_ai':['/Users/gongya/Programming/mac_python/proj_ai/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/PythonAI_Indexes.md'],
+    'gyu_obsidian':['/Users/gongya/obsidian/gyu-obsidian/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/Obsidian_Indexes.md'],
+    'music':['/Volumes/192.168.1.57/music/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/Music_Indexes.md']
+}
 
-topic_list = sorted([topic for topic in glob.glob(
-    '*') if os.path.isdir(topic) and topic not in non_topic_list])
+bk_prefix = {
+    '/Users/gongya/Programming/mac_python/proj_python/':'/Volumes/192.168.1.57/MAC_M5/latest/mac_python/proj_python/',
+    '/Users/gongya/Programming/mac_python/proj_ai/':'/Volumes/192.168.1.57/MAC_M5/latest/mac_python/proj_ai/',
+    '/Users/gongya/obsidian/gyu-obsidian/':'/Volumes/192.168.1.57/MAC_M5/latest/obsidian/gyu-obsidian/',
+    '/Users/gongya/Programming/mac_python/':'/Volumes/192.168.1.57/MAC_M5/latest/mac_python/',
+    '/Users/gongya/Programming/uv_python/':'/Volumes/192.168.1.57/MAC_M5/latest/uv_python/',
+    '/Users/gongya/obsidian/':'/Volumes/192.168.1.57/MAC_M5/latest/obsidian/'
+}
+
+excludedirs = ['__pycache__','pycache']
+days = 100
+
+topdirlist = startfrom.keys()
+
+# demo variables
+def topic_list():
+    topics = sorted([topic for topic in glob.glob(
+        '*') if os.path.isdir(topic) and topic not in non_topic_list])
+    topics.append('py99_files')
+    return topics
 
 
 def subtopic_list(topic):
@@ -97,6 +131,125 @@ def execute_func(mod_dir, mod_name, func):
     func = getattr(module, func)
     func()
 
+#
+# py99_files
+#
+def get_all_directories(start_folder):
+    """Return all directories recursively from a starting folder."""
+    directories = [start_folder]
+    for root, dirs, files in os.walk(start_folder):
+        dirs[:] = [d for d in dirs if not d.startswith('.')]
+        for d in dirs:
+            if d in excludedirs: continue
+            directories.append(os.path.join(root, d))
+    return directories
+
+def listfiles(key, days, bkcheck, kword):
+    dirs = get_all_directories(startfrom[key][0])
+    if key != 'AI':
+        bk_dirs = get_bk_dirs(bk_prefix[startfrom[key][0]])
+    
+    #keyword = 'RAG'
+    keyword = None
+    curfnlist = []
+
+    with open(startfrom[key][1],'w') as fh:
+        for d in dirs:           
+            dir_path = pathlib.Path(d)
+            filelist = []
+
+            bkfilelists = bk_listfiles(d)
+            for entry in dir_path.iterdir(): 
+                if entry.is_file() and not re.search(r'^\.',entry.name):
+                    mdate = datetime.fromtimestamp(entry.stat().st_mtime).date()
+                    if int(days) > 0 :
+                        if entry.stat().st_mtime < (int(time.time()) - (int(days) * 86400)): continue
+
+                    if kword == None:
+                        filelist.append([entry.name,str(mdate)])
+                    else:
+                        if re.search(r'{}'.format(kword), entry.name):
+                            filelist.append([entry.name,str(mdate)])
+            if len(filelist) > 0:
+                curfnlist = []
+                fh.write(f"#### {d}\n")
+                st_print(f"##### {d}")
+                for idx,fn in enumerate(sorted(filelist), start=1):
+                    curfnlist.append(fn[0])
+                    if fn[0] in bkfilelists:
+                        if fn[1] > bkfilelists[fn[0]]:
+                            fh.write(f"{idx}. {fn[0]},{fn[1]}  # updated: bk mtime - {bkfilelists[fn[0]]} ")
+                            code_print(f"{idx}. {fn[0]},{fn[1]}  # updated: bk mtime - {bkfilelists[fn[0]]} ")
+                        elif fn[1] == bkfilelists[fn[0]]:
+                            if not bkcheck:
+                                fh.write(f"{idx}. {fn[0]},{fn[1]}  # the same: bk mtime - {bkfilelists[fn[0]]} ")
+                                code_print(f"{idx}. {fn[0]},{fn[1]}  # the same: bk mtime - {bkfilelists[fn[0]]} ")
+                        else:
+                            fh.write(f"{idx}. {fn[0]},{fn[1]}  # older: bk mtime - {bkfilelists[fn[0]]} ")
+                            code_print(f"{idx}. {fn[0]},{fn[1]}  # older: bk mtime - {bkfilelists[fn[0]]} ")
+                    else:
+                        fh.write(f"{idx}. {fn[0]},{fn[1]}\n") 
+                        code_print(f"{idx}. {fn[0]},{fn[1]}") 
+                st_code(code_print(f""))
+
+                if days == '0' and key != 'AI':
+                    # trace the from backup files
+                    idx = 1
+                    bk_title = 0
+                    
+                    for bfile in bkfilelists.keys():
+                        if curfnlist:
+                            if bfile in curfnlist: continue
+                            if bk_title == 0:
+                                code_print(f"backup files only")
+                                bk_title = 1
+                            code_print(f"{idx}. {bfile}")
+                            idx += 1
+                    if idx > 1:
+                        st_code(f"{code_print(f'')}")
+
+                    st_markline()
+                    final_print = 0
+                    for bdir in bk_dirs:
+                        if re.search(r'^/Volumes/192.168.1.57/MAC_M5/latest/mac_python/',bdir):
+                            macdir = re.sub(r'^/Volumes/192.168.1.57/MAC_M5/latest/mac_python/','/Users/gongya/Programming/mac_python/', bdir)
+                        elif re.search(r'^/Volumes/192.168.1.57/MAC_M5/latest/uv_python/',bdir):
+                            macdir = re.sub(r'^/Volumes/192.168.1.57/MAC_M5/latest/uv_python/','/Users/gongya/Programming/uv_python/', bdir)
+                        elif re.search(r'^/Volumes/192.168.1.57/MAC_M5/latest/obsidian/',bdir):
+                            macdir = re.sub(r'^/Volumes/192.168.1.57/MAC_M5/latest/obsidian/','/Users/gongya/obsidian/', bdir)
+                        if macdir not in dirs:
+                            final_print = 1
+                            code_print(f"{bdir}")
+                    if final_print == 1:
+                        st_code(f"{code_print(f'')}")               
+
+def bk_listfiles(dir_path):
+    bk_listfiles = {}
+    if re.search(r"^/Users/gongya/Programming/mac_python", dir_path):
+        bk_dir_path = re.sub(r'^/Users/gongya/Programming/mac_python','/Volumes/192.168.1.57/MAC_M5/latest/mac_python', dir_path)
+    elif re.search(r"^/Users/gongya/Programming/uv_python", dir_path):
+        bk_dir_path = re.sub(r'^/Users/gongya/Programming/uv_python','/Volumes/192.168.1.57/MAC_M5/latest/uv_python', dir_path)
+    elif re.search(r"^/Users/gongya/obsidian/", dir_path):
+        bk_dir_path = re.sub(r'^/Users/gongya/obsidian/','/Volumes/192.168.1.57/MAC_M5/latest/obsidian/', dir_path)
+    else:
+        return bk_listfiles
+
+    if not os.path.exists(bk_dir_path):
+        st.write(f'Error: {bk_dir_path} does not exist!')
+        return bk_listfiles
+
+    dir_path = pathlib.Path(bk_dir_path)
+    for entry in dir_path.iterdir():
+        if entry.is_file() and not re.search(r'^\.',entry.name):
+            mdate = datetime.fromtimestamp(entry.stat().st_mtime).date()
+            bk_listfiles[entry.name] = str(mdate)
+    return bk_listfiles
+
+def get_bk_dirs(bk_startfrom):
+    bk_dirs = get_all_directories(bk_startfrom)
+    return bk_dirs
+    
+### end of py99_files
 
 def line_print(out: str) -> str:
     global outlines
@@ -106,8 +259,8 @@ def line_print(out: str) -> str:
 
 def code_print(out: str) -> str:
     global codelines
-    codelines += out + '\n'
-    print(f"--- {codelines}")
+    if out:
+        codelines += out + '\n'
     return codelines
 
 

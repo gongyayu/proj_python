@@ -14,6 +14,18 @@ def py_set():
     st_code(f"{codelines} \nset1: {type(set1)} \nset: {set1}")   # no duplicated elements
 ### EndofCodeSection###
 
+def py_set_attr():
+    set1 = {1, 2, 3, 4, 5}
+    st_code(f"set1: {set1}")
+    code_print(f"dir(set1): {dir(set1)}")
+    code_print(f"len(set1): {len(set1)}")
+    code_print(f"max(set1): {max(set1)}")
+    code_print(f"min(set1): {min(set1)}")
+    code_print(f"sum(set1): {sum(set1)}")
+    st_code(f"{code_print('')}")
+### EndofCodeSection###
+
+
 def py_list_set():
     a = [5,63,8,2,25,4,5,15,5,9]
     code_print(f"a: {a}")
@@ -69,6 +81,14 @@ def py_setloop():
     st_code(f"{code_print('')}")
 ### EndofCodeSection###
 
+def py_setquizzes():
+    def setquiz1():
+        items = {1, 2, 3, 4}
+        common = items & {3, 4, 5}
+        left = items - {2, 4}
+        st_code(f"common: {common}  sorted(common): {sorted(common)}, left: {left} sorted(left): {sorted(left)}")
+    setquiz1()
+### EndofCodeSection###
 
 
  

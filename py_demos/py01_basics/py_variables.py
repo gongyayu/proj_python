@@ -1,4 +1,4 @@
-from py_mod import line_print,st_print,st_code,code_print,codelines
+from py_mod import line_print,st_print,st_code,code_print,codelines,st_markline
 
 ### StartofFunc###
 def py_string():
@@ -70,6 +70,14 @@ def py_number():
 
     line_print(f"math.floor(PI) -> {math.floor(PI)}")
     st_print(line_print(f''))
+
+    def pyhex():
+        st_markline()
+        num = 255
+        code_print(f"num:x: {num:x}")
+        code_print(f"num:X: {num:X}")
+        st_code(code_print(f''))
+    pyhex()
 ### EndofCodeSection###
 
 def py_booltype():
@@ -143,3 +151,26 @@ def py_scope():
         main()
         print(a)                                       # a = 20
 ### EndofCodeSection###
+
+def py_binding():
+    listA = [1,'Tom',3.1,'Apple']
+
+    def pybindingA():
+        code_print(f"1 in listA: {1 in listA}")
+        del listA[0]
+        code_print(f"after del listA[0]: {listA}")
+        st_code(f"{code_print(f'')}1 in listA: {1 in listA}")
+    pybindingA()
+    st_markline()
+
+    def pybindingB():
+        nonlocal listA                                             # nonlocal is required, 
+                                                                   # or UnboundLocalError: cannot access local variable 'listA' where it is not associated with a value
+        del listA
+        try:
+            st_code(f"del listA: {listA}")
+        except Exception as e:
+            st_code(f"del listA -> Error: {str(e)}")
+    pybindingB()
+### EndofCodeSection###
+

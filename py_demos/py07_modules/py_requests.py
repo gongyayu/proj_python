@@ -24,3 +24,21 @@ def py_getweather():
     st_code(f"Temperature in Paris: {temperature}°C")
 
 ### EndofCodeSection###
+
+def py_get_html_text():
+    try:
+        def get_web_text(url):
+            headers = {"User-Agent": "Moxilla5.0"}
+            resp = requests.get(url, headers=headers, timeout=10)
+            resp.raise_for_status()
+            resp.encoding = resp.apparent_encoding
+            # get web page documentation
+            html_text = resp.text
+            # retrieve the first 500 words    
+            html_text = f"browsing the web page docs: \n" + html_text[:500]
+            return html_text
+    except Exception as e:
+        return f"Error: {str(e)}"
+    st_code(f"{get_web_text('https://www.baidu.com')}")
+### EndofCodeSection###
+    

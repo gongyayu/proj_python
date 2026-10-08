@@ -1,9 +1,11 @@
-from py_mod import line_print,st_print,st_code,code_print,codelines, st_markline
+from py_mod import line_print,st_print,st_code,code_print, st_markline
 
 ### StartofFunc###
 
-def py_try():
-    global codelines
+
+### EndofCodeSection###
+
+def py_tryA():
     tinydict = {}
     # delete the entire dictionary
     del tinydict
@@ -11,32 +13,35 @@ def py_try():
         st_code(f"tinydict -> {tinydict}")
     except Exception as e:
         st_code(f"Error: {str(e)}")
-    st_markline()
+### EndofCodeSection###
 
+def py_tryB():
     try:
         with open("test.txt") as fh:
-            codelines = f"file open successful"
+            st_code(f"file open successful")
             pass
     except Exception as e:
         st_code(f"Error: {str(e)}")
     else:
-        codelines = f"\nELSE runs when the TRY works"
+        st_code(f"\nELSE runs when the TRY works")
     finally:
-        st_code(f"{codelines} \nfinal deal always runs")
-    st_markline()
+        st_code(f"final deal always runs")
+### EndofCodeSection###
 
+def py_tryC():
     try:
         with open("data/in/Parsing-input.txt") as fh:
-            code_print(f"file open successful")
+            st_code(f"file open successful")
             #pass
     except Exception as e:
         st_code(f"Error: {str(e)}")
     else:
-        code_print(f"ELSE runs when the TRY works")
+        st_code(f"ELSE runs when the TRY works")
     finally:
-        st_code(f"{code_print(codelines)}final deal always runs")
-    st_markline()
+        st_code(f"final deal always runs")
+### EndofCodeSection###
 
+def py_tryD():
     try:
         answer = 10/0
         number = int(input('Enter a number: '))

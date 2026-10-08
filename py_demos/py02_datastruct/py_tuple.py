@@ -1,6 +1,6 @@
 import streamlit as st
 import json
-from py_mod import line_print, st_print
+from py_mod import line_print, st_print, code_print, st_code,st_markline
 
 ### StartofFunc###
 
@@ -37,3 +37,18 @@ def py_tuple():
         f"[(k, v) for k, v in zip(a, b)]: {[(k, v) for k, v in zip(a, b)]}")
     st_print(line_print(f''))
 ### EndofCodeSection###
+
+def py_tuple_quizzes():
+    def quiz1():
+        x = (1,2)
+        st_code(f"x + (3,): {x + (3,)}")
+        # pay attention ','
+        try:
+            x + (3)
+        except Exception as e:
+            st_code(f"Error: {str(e)}")
+    quiz1()
+
+### EndofCodeSection###
+
+

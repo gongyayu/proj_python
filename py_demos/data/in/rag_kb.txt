@@ -1,0 +1,12 @@
+Full-time employees are entitled to 20 paid vacation days per year.
+Vacation days can be taken after completing 6 months of employment.
+Unused vacation days can be carried over to the next year up to a maximum of 5 days.
+Vacation requests should be submitted at least 2 weeks in advance through the HR portal.
+The Eiffel Tower is located in Paris, France. It was completed in 1889.
+Python is a high-level programming language created by Guido van Rossum in 1991.
+The Great Wall of China is over 13,000 miles long and was built over many centuries.
+Transformers are a neural network architecture introduced in the paper 'Attention Is All You Need' (2017).
+RAG stands for Retrieval-Augmented Generation, combining a retriever with a language model.
+The capital of Japan is Tokyo, which is one of the most populous cities in the world.
+Photosynthesis is the process by which plants convert sunlight into chemical energy.
+The human genome contains approximately 3 billion base pairs of DNA.

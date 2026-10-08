@@ -2,61 +2,20 @@ import streamlit as st
 import json
 from typing import Dict, Any
 import pprint
-from py_mod import line_print, st_print, st_code, st_markline
+from py_mod import line_print, st_print, code_print, st_code, st_markline
 
 
 ### StartofFunc###
 
 
-def py_dictionary():
+def py_dict():
     # initialization
     dict1 = {}
-    dict1['one'] = "This is one"
-    dict1[2] = "This is two"
-    tinydict = {'name': 'john', 'code': 6734, 'dept': 'sales'}
-    line_print(
-        f"dict1['one']: {dict1['one']}, dict1[2]: {dict1[2]}, tinydict: {tinydict}")
-    line_print(f'keys -----')
-    # prints all the keys
-    line_print(
-        f"tinydict.keys(): {tinydict.keys()}, list(tinydict): {list(tinydict)}")
-    for key in tinydict.keys():
-        line_print(f"key: {key}")
-    line_print(f"'gongya' in tinydict: {'gongya' in tinydict}")
-    try:
-        tinydict.get("gongya", "no gongya")
-    except Exception as e:
-        line_print(f"Error: {str(e)}")
 
-    line_print(f'values -----')
-    # print all the values
-    line_print(f"tinydict.values(): {tinydict.values()}")
-    line_print(f'items -----')
-    # prints both keys and values
-    line_print(f"tinydict.items(): {tinydict.items()}")
-    # john, or not a valid key
-    line_print(
-        f"tinydict.get('name', 'not a valid key'): {tinydict.get('name', 'not a valid key')}")
-
-    # TypeError: 'dict' object is not callable
-    d = dict(a='Africa', b='Belgium', c='Cairo', d='Detroit')
-    line_print(f"{d}")
-    try:
-        d = dict(a=10, b=20, c=30, d=40)
-        line_print(f'{d}')
-    except Exception as e:
-        line_print(f"Error: {str(e)}")
-    st_markline()
-    # get usage
-    order_dict = [{"order_id": 1, "price": 100, "product_quantity": 1},
-                  {"order_id": 2, "price": 200, "product_quantity": 3},
-                  {"order_id": 3, "price": -300, "product_quantity": 6},
-                  {"order_id": 4, "price": 400, "product_quantity": 2},]
-    for order in order_dict:
-        st_code(f"order.get('order_id'): {order.get('order_id')}")
-
+    # dictionary, keys and values
+    #
     # These are all valid with Dict[str, Any]
-    my_dict: Dict[str, Any] = {         # Keys must be strings (str), Values can be anything (Any)
+    valid_dict: Dict[str, Any] = {         # Keys must be strings (str), Values can be anything (Any)
         "name": "Alice",                # str
         "age": 30,                      # int
         "scores": [95, 87, 92],         # list
@@ -64,95 +23,175 @@ def py_dictionary():
         "metadata": {"key": "value"},   # dict
         "nothing": None                 # NoneType
     }
-    line_print(f"my_dict: {my_dict}")
+    code_print(f"valid_dict: {valid_dict}")
+    st_markline()
 
-    """
-    from typing import Dict, Union, TypedDict
+    dict1['gongya'] = "Engineer"
+    dict1[2] = 222
+    code_print(f"dict1: {dict1}")
+    code_print(f"dict1.keys(): {dict1.keys()}, list(dict1): {list(dict1)}")
+    code_print(f"dict1.values(): {dict1.values()}")
+    st_code(f"{code_print(f'')}")
+    st_markline()
 
-    # More specific
-    Dict[str, Union[int, str, list]]
+    # loop the keys
+    for key in dict1.keys():
+        code_print(f"key: {key}")
+    st_code(f"{code_print(f'')}")
+    st_markline()
 
-    # Most precise - define expected structure
-    class User(TypedDict):
-        name: str
-        age: int
-        scores: list[int]
-    # Then use: Dict[str, User] or just User
-    """
-    line_print(f"multivalues -----")
-    multival = {'fruits': ['apple', 'peach', 'pear'],
-                'vegetables': ['cabbage', 'carrot', 'lettuce']}
-    line_print(f"multival: {multival}")
-    for k in (multival.keys()):
-        line_print(
-            f"{str(k)} --> {multival[k][0]} --> {multival[k][1]} --> {multival[k][1]}")
+    # check if the key exists
+    code_print(f"'gongya' in dict1.keys(): {'gongya' in dict1.keys()}")
+    code_print(f"'gongya' in dict1: {'gongya' in dict1}")
+    st_code(f"{code_print(f'')}")
+    st_markline()
 
-    A0 = dict(zip(('a', 'b', 'c', 'd', 'e'), (1, 2, 3, 4, 5)))
-    line_print(f"combine 2 lists to dictionary: -----<br> {A0}")
-    st_print(line_print(f''))
-### EndofCodeSection###
-
-
-def py_dictionary_operations():
-    import string
-    tinydict = {'name': 'john', 'code': 6734,
-                'dept': 'sales', 'major': 'Math'}
-    line_print(f"pydictionary_operations() {'-' * 30}")
-    line_print(
-        f"'codex' in reversed(sorted(tinydict.keys())): {'codex' in reversed(sorted(tinydict.keys()))}")
-    line_print(f"del, pop, popitem, clear -----")
-    # delete an entry with key
-    del tinydict['name']
-    line_print(f"del tinydict('name'): {tinydict}")
-    # return 6734
-    line_print(
-        f"tinydict.pop('code'): {tinydict.pop('code')}, tinydict: {tinydict}")
-    # return ('dept', 'sales')
-    line_print(
-        f"tinydict.popitem(): {tinydict.popitem()}, tinydict: {tinydict}")
-
-    # remove all entries
-    tinydict.clear()
-    line_print(f"tinydict: {tinydict}")
-    # delete the entire dictionary
-    del tinydict
+    # get method
     try:
-        line_print(f"tinydict: {tinydict}")
+        val = dict1.get("gongya", "not a valid key")
+        st_code(f"val: {val}")
     except Exception as e:
-        line_print(f'Error: {str(e)}')
+        st_code(f"Error: {str(e)}")
+    st_markline()
 
-    # list(string.ascii_lowercase)
-    line_print(f"list(string.ascii_lowercase) -----")
-    alphabet = list(string.ascii_lowercase)
-    line_print(f"alphabet: {alphabet}")
-    # list comprehension
-    d = {val: idx for idx, val in enumerate(alphabet)}
-    line_print(f"d: {d}")
-    st_print(line_print(f''))
+    # prints both keys and values
+    code_print(f"dict1.items(): {dict1.items()}")
+    for key, value in dict1.items():
+        code_print(f"key: {key}, value: {value}")
+    st_code(f"{code_print(f'')}")
+
+### EndofCodeSection###
+
+def py_quizzes():
+    def get_method():
+        st_markline()
+        order_list = [{"order_id": 1, "price": 100, "product_quantity": 1},
+                    {"order_id": 2, "price": 200, "product_quantity": 3},
+                    {"order_id": 3, "price": -300, "product_quantity": 6},
+                    {"order_id": 4, "price": 400, "product_quantity": 2},]
+        for order in order_list:
+            code_print(f"order.get('order_id'): {order.get('order_id')}, order.get('price'): {order.get('price')}, order.get('product_quantity'): {order.get('product_quantity')}")
+        st_code(f"{code_print(f'')}")
+    get_method()   
+
+    def demo():
+        from typing import Dict, Union, TypedDict
+
+        # More specific
+        Dict[str, Union[int, str, list]]
+
+        # Most precise - define expected structure
+        class User(TypedDict):
+            name: str
+            age: int
+            scores: list[int]
+        # Then use: Dict[str, User] or just User
+    
+    def multivalues():
+        st_markline()
+        multival = {'fruits': ['apple', 'peach', 'pear'],
+                    'vegetables': ['cabbage', 'carrot', 'lettuce']}
+        code_print(f"multival: {multival}")
+        for k in (multival.keys()):
+            code_print(
+                f"{str(k)} --> {multival[k][0]} --> {multival[k][1]} --> {multival[k][1]}")
+        st_code(f"{code_print(f'')}")
+    multivalues()
+
+    def zip_method():
+        st_markline()
+        A0 = dict(zip(('a', 'b', 'c', 'd', 'e'), (1, 2, 3, 4, 5)))
+        st_code(f"combine 2 lists to dictionary: -----<br> {A0}")
+    zip_method()
+### EndofCodeSection###
+
+def py_dict_ops():
+    dict1 = {'name': 'john', 'code': 6734,'dept': 'sales', 'major': 'Math'}
+
+    def dict_pop():
+        # return 6734
+        st_code(f"dict1.pop('code'): {dict1.pop('code')}, dict1: {dict1}")
+    dict_pop()
+
+    def dict_popitem():
+        st_markline()
+        # return ('dept', 'sales')
+        st_code(f"dict1.popitem(): {dict1.popitem()}, dict1: {dict1}")
+    dict_popitem()
+
+    def dict_clear():
+        dict1 = {'name': 'john', 'code': 6734,'dept': 'sales', 'major': 'Math'}
+        st_markline()
+        # remove all entries
+        st_code(f"dict1.clear(): {dict1.clear()}, {dict1}")
+    dict_clear()
+
+    def dict_del():
+        nonlocal dict1
+        st_markline()
+        # delete an entry with key
+        del dict1['name']
+        st_code(f"del dict1('name'): {dict1}")
+
+        # delete the entire dictionary
+        del dict1
+        try:
+            st_code(f"dict1: {dict1}")
+        except Exception as e:
+            st_code(f'Error: {str(e)}')
+    dict_del()
+
+    def demo():
+        import string
+        st_markline()
+        # list(string.ascii_lowercase)
+        alphabet = list(string.ascii_lowercase)
+        code_print(f"alphabet: {alphabet}")
+        # list comprehension
+        d = {val: idx for idx, val in enumerate(alphabet)}
+        code_print(f"d: {d}")
+        st_code(code_print(f''))
+    demo()
 ### EndofCodeSection###
 
 
-def py_dictionary_sorting():
-    # sorted dictionary
-    line_print(f"pydictionary_sorting() {'-' * 30}")
-    mydict = dict(a=1, b=3, c=2)
-    mydict_sorted = {k: v for k, v in sorted(
-        mydict.items(), key=lambda x: x[1])}
-    line_print(f"mydict: {mydict}, 'mydict_sorted: {mydict_sorted}")
+def py_dict_sort():
+    dict1 = {'name': 'john', 'code': '6734','dept': 'sales', 'major': 'Math'}
+    code_print(f"dict1: {dict1}")
+    code_print(f"sorted(dict1, key=dict1.__getitem__): {sorted(dict1, key=dict1.__getitem__)}")  # sort the value and return the key
+    code_print(f"sorted(dict1.values(): {sorted(dict1.values())}")
+    code_print(f"sorted(dict1.keys(): {sorted(dict1.keys())}")
 
-    str_data = {'name': 'john', 'code': '6734', 'dept': 'sales'}
-    line_print(f"str_data: {str_data}")
-    line_print(
-        f"sorted(str_data, key=str_data.__getitem__): {sorted(str_data, key=str_data.__getitem__)}")
-    line_print(f"sorted(str_data.values(): {sorted(str_data.values())}")
-    line_print(f"sorted(str_data.keys(): {sorted(str_data.keys())}")
     # return sorted dictionary based on the key
-    line_print(f"sorted(str_data.items(): {sorted(str_data.items())}")
-    st_print(line_print(f''))
+    code_print(f"sorted(dict1.items(): {sorted(dict1.items())}")
+    st_code(code_print(f''))
+
+    # sorted dictionary
+    st_markline()
+    dict2 = dict(a=2, c=3, b=1)
+    # x represents a single (key, value) tuple from dict2.items()
+    # x[0] = the key (first element of the tuple)
+    # x[1] = the value (second element of the tuple)
+    dict2_sorted = {k: v for k, v in sorted(dict2.items(), key=lambda x: x[0])}                                                                           
+    st_code(f"dict2: {dict2}, 'dict2_sorted: {dict2_sorted}")
+
+    # reversed a dictionary
+    st_markline()
+    dict1 = {'name': 'john', 'code': '6734','dept': 'sales', 'major': 'Math'}
+    # code_print(f"reversed(dict1: {dict(reversed(dict1))}")
+    # code_print(f"reversed(dict1.keys()): {reversed(dict1.keys())}")
+    # code_print(f"reversed(dict1.values()): {reversed(dict1.values())}")
+    code_print(f"dict(reversed(dict1.items())): {dict(reversed(dict1.items()))}")
+    code_print(f"sorted(dict(reversed(dict1.items()))): {sorted(dict(reversed(dict1.items())))}")
+    st_code(code_print(f''))
+
+    
+
+    
 ### EndofCodeSection###
 
 
-def py_getnesteddict():
+def py_dict_nested():
     def get_nested_value(data: dict, key_list: list, default=None):
         current = data
         for key in key_list:

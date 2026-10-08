@@ -1,49 +1,40 @@
 import streamlit as st
-from py_mod import st_code, line_print, st_markline, st_code, outlines
+from py_mod import st_code, line_print, st_markline, code_print, outlines
 
 ### StartofFunc###
 
-
-def py_enumerate():
-    names = ['Corey', 'Chris', 'Dave', 'Travis',]
-    for index, name in enumerate(names, start=1):
-        st_code(f"index: {index}, name: {name}")
-    st_markline()
-    # Python program to illustrate enumerate function
-    l1 = ["eat", "sleep", "repeat"]
-    s1 = "geek"
-
-    # creating enumerate objects
-    obj1 = enumerate(l1)
-    obj2 = enumerate(s1)
-    st_code(f"enumerate(l1): {enumerate(l1)}")
-    st_code(f"Return type for enumerate(l1): {type(enumerate(l1))}")
-    st_code(f"list(enumerate(l1)): {list(enumerate(l1))}")
-
-    # changing start index to 2 from 0
-    st_code(f"list(enumerate(s1,2)): {list(enumerate(s1, 2))}")
-
-    # printing the tuples in object directly
-    for element in enumerate(l1):
-        st_code(f"element: {element}")
-    # changing index and printing separately
-    for count, element in enumerate(l1, 100):
-        st_code(f"count: {count}, element: {element}")
-### EndofCodeSection###
-
-
 def py_zip():
-    names = ['Peter Parker', 'Clark Kent', 'Wade Wilson', 'Bruce Wayne']
-    heroes = ['Spiderman', 'Superman', 'Deadpool', 'Batman']
-    universes = ['Marvel', 'DC', 'Marvel', 'DC']
+    def pyzipA():
+        names = ['Peter Parker', 'Clark Kent', 'Wade Wilson', 'Bruce Wayne']
+        heroes = ['Spiderman', 'Superman', 'Deadpool', 'Batman']
+        universes = ['Marvel', 'DC', 'Marvel', 'DC']
 
-    for index, name in enumerate(names):
-        hero = heroes[index]
-        st_code(f'{name} is actually {hero}')
-    for name, hero, universe in zip(names, heroes, universes):
-        st_code(f'{name} is actually {hero} from {universe}')
-    for value in zip(names, heroes, universes):
-        st_code(f"value: {value}")
+        for index, name in enumerate(names):
+            hero = heroes[index]
+            code_print(f'{name} is actually {hero}')
+        st_code(f'{code_print(f'')}')
+        st_markline()
+
+        for name, hero, universe in zip(names, heroes, universes):
+            code_print(f'{name} is actually {hero} from {universe}')
+        st_code(f'{code_print(f'')}')
+        st_markline()
+
+        for value in zip(names, heroes, universes):
+            code_print(f"value: {value}")
+        st_code(f'{code_print(f'')}')
+    pyzipA()
+    st_markline()
+
+    def pyzipB():
+        a = [1,2,3,4]
+        b = [4,5]
+
+        result = []
+        for x,y in zip(a,b):
+            result.append(x+y)
+        st_code(f'result: {result}')
+    pyzipB()
 ### EndofCodeSection###
 
 

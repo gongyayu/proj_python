@@ -1,0 +1,247 @@
+{
+  "project": {
+    "name": "Enterprise Knowledge Assistant",
+    "version": "1.0.0",
+    "description": "A RAG-based system for querying internal enterprise documentation",
+    "author": "AI Team",
+    "created_at": "2024-01-15T09:00:00Z",
+    "last_updated": "2024-06-20T14:30:00Z",
+    "license": "MIT",
+    "repository": "https://github.com/company/rag-assistant"
+  },
+
+  "architecture": {
+    "type": "modular_rag",
+    "pipeline_stages": [
+      "document_ingestion",
+      "chunking",
+      "embedding",
+      "vector_storage",
+      "retrieval",
+      "reranking",
+      "prompt_construction",
+      "generation"
+    ],
+    "components": {
+      "document_loader": {
+        "supported_formats": ["pdf", "docx", "html", "markdown", "txt"],
+        "loader_type": "unstructured",
+        "ocr_enabled": true
+      },
+      "text_splitter": {
+        "strategy": "recursive_character",
+        "chunk_size": 512,
+        "chunk_overlap": 50,
+        "separators": ["\n\n", "\n", ". ", " "]
+      },
+      "embedding_model": {
+        "provider": "openai",
+        "model": "text-embedding-3-large",
+        "dimensions": 3072,
+        "batch_size": 100
+      },
+      "vector_store": {
+        "provider": "pinecone",
+        "index_name": "enterprise-kb",
+        "metric": "cosine",
+        "namespace": "production"
+      },
+      "retriever": {
+        "type": "hybrid",
+        "top_k": 10,
+        "similarity_threshold": 0.75,
+        "use_mmr": true,
+        "mmr_lambda": 0.5
+      },
+      "reranker": {
+        "enabled": true,
+        "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "top_n": 5
+      },
+      "llm": {
+        "provider": "openai",
+        "model": "gpt-4-turbo",
+        "temperature": 0.2,
+        "max_tokens": 2048,
+        "top_p": 0.95
+      }
+    }
+  },
+
+  "data_sources": [
+    {
+      "id": "ds_001",
+      "name": "HR Policy Documents",
+      "type": "sharepoint",
+      "location": "https://company.sharepoint.com/sites/hr-policies",
+      "document_count": 245,
+      "last_synced": "2024-06-19T22:00:00Z",
+      "update_frequency": "daily",
+      "metadata_fields": ["department", "effective_date", "version", "author"]
+    },
+    {
+      "id": "ds_002",
+      "name": "Engineering Wiki",
+      "type": "confluence",
+      "location": "https://company.atlassian.net/wiki/eng",
+      "document_count": 1893,
+      "last_synced": "2024-06-20T03:00:00Z",
+      "update_frequency": "hourly",
+      "metadata_fields": ["space", "labels", "last_modified", "contributors"]
+    },
+    {
+      "id": "ds_003",
+      "name": "Product Documentation",
+      "type": "s3_bucket",
+      "location": "s3://company-docs/product/",
+      "document_count": 567,
+      "last_synced": "2024-06-18T12:00:00Z",
+      "update_frequency": "weekly",
+      "metadata_fields": ["product_line", "release_version", "doc_type"]
+    }
+  ],
+
+  "api": {
+    "base_url": "https://api.company.com/rag/v1",
+    "authentication": {
+      "type": "bearer_token",
+      "header": "Authorization",
+      "token_endpoint": "/auth/token"
+    },
+    "endpoints": [
+      {
+        "path": "/query",
+        "method": "POST",
+        "description": "Submit a query and get a generated answer with sources",
+        "request_schema": {
+          "query": "string",
+          "top_k": "integer (optional)",
+          "filters": "object (optional)",
+          "conversation_id": "string (optional)",
+          "stream": "boolean (optional)"
+        },
+        "response_schema": {
+          "answer": "string",
+          "sources": "array of {doc_id, chunk_id, score, snippet, url}",
+          "conversation_id": "string",
+          "latency_ms": "integer",
+          "tokens_used": "object"
+        },
+        "rate_limit": "100 requests/minute"
+      },
+      {
+        "path": "/documents/ingest",
+        "method": "POST",
+        "description": "Ingest new documents into the vector store"
+      },
+      {
+        "path": "/documents/{doc_id}",
+        "method": "DELETE",
+        "description": "Remove a document from the index"
+      },
+      {
+        "path": "/health",
+        "method": "GET",
+        "description": "Health check endpoint"
+      }
+    ]
+  },
+
+  "example_queries": [
+    {
+      "query": "What is the parental leave policy?",
+      "retrieved_chunks": [
+        {
+          "doc_id": "hr_245",
+          "chunk_id": "hr_245_c3",
+          "score": 0.89,
+          "text": "Employees are entitled to 16 weeks of paid parental leave..."
+        }
+      ],
+      "answer": "According to the HR policy (effective Jan 2024), employees are entitled to 16 weeks of paid parental leave, applicable to all full-time employees after 90 days of employment.",
+      "sources": ["https://company.sharepoint.com/hr-policies/parental-leave"]
+    }
+  ],
+
+  "evaluation": {
+    "metrics": {
+      "retrieval": ["recall@k", "mrr", "ndcg", "hit_rate"],
+      "generation": ["faithfulness", "answer_relevancy", "context_precision", "context_recall"],
+      "end_to_end": ["latency_p50", "latency_p95", "user_satisfaction"]
+    },
+    "test_sets": [
+      {
+        "name": "golden_qa_set",
+        "size": 500,
+        "last_run": "2024-06-15T10:00:00Z",
+        "scores": {
+          "recall@5": 0.87,
+          "faithfulness": 0.92,
+          "answer_relevancy": 0.89
+        }
+      }
+    ],
+    "framework": "ragas"
+  },
+
+  "monitoring": {
+    "logging": {
+      "level": "info",
+      "destination": "cloudwatch",
+      "log_queries": true,
+      "log_retrieved_chunks": true,
+      "pii_redaction": true
+    },
+    "metrics_dashboard": "https://grafana.company.com/d/rag-prod",
+    "alerts": [
+      {
+        "name": "high_latency",
+        "condition": "p95_latency > 3000ms",
+        "severity": "warning"
+      },
+      {
+        "name": "low_retrieval_score",
+        "condition": "avg_retrieval_score < 0.6",
+        "severity": "critical"
+      }
+    ]
+  },
+
+  "security": {
+    "access_control": {
+      "method": "rbac",
+      "roles": ["admin", "user", "readonly"],
+      "document_level_permissions": true
+    },
+    "data_privacy": {
+      "pii_detection": true,
+      "encryption_at_rest": true,
+      "encryption_in_transit": true
+    }
+  },
+
+  "deployment": {
+    "environment": "production",
+    "cloud_provider": "aws",
+    "region": "us-east-1",
+    "compute": {
+      "api_service": "ECS Fargate (2 vCPU, 4GB RAM, 3 tasks)",
+      "ingestion_worker": "Lambda (1024MB, 15min timeout)"
+    },
+    "ci_cd": {
+      "pipeline": "github_actions",
+      "stages": ["test", "build", "staging_deploy", "integration_test", "prod_deploy"]
+    }
+  },
+
+  "costs": {
+    "monthly_estimate_usd": {
+      "embeddings": 45.00,
+      "llm_inference": 320.00,
+      "vector_store": 70.00,
+      "compute": 150.00,
+      "storage": 25.00,
+      "total": 610.00
+    }
+  }
+}

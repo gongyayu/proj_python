@@ -126,28 +126,6 @@ def py_onelinecode():
 
 ### EndofCodeSection###
 
-
-def py_lambda():
-    def lambda01():
-        funcs = []
-        for i in range(3):
-            func = lambda x: x + i               # late binding. In Python, a lambda (or any nested function) captures variables by reference, not by value. 
-            funcs.append(func)
-        run = [f(1) for f in funcs]
-        st_code(f"{run}")
-    lambda01()
-    st_markline()
-
-    def lambda02():
-        funcs = []
-        for i in range(3):
-            func = lambda x, i=i: x + i           # bind the value instead of the references
-            funcs.append(func)
-        run = [f(1) for f in funcs]
-        st_code(f"{run}")
-    lambda02()
-### EndofCodeSection###
-
 def py_datatype():
     def datatype01():
         a = {x: x**2 for x in range(30)}
@@ -156,7 +134,7 @@ def py_datatype():
     datatype01()
 ### EndofCodeSection###
 
-def py_listquizes():
+def py_listquizzes():
     def listpop():
         x = [1,2,3]
         st_code(f"x.pop(), x: {x.pop(),x}")
@@ -175,8 +153,13 @@ def py_listquizes():
         a[1:3] = [8]
         st_code(f"a: {a}")
     listsliceB()
+
+    def listsliceC():
+        st_markline()
+        st_code(f"list(range(5))[::-2]: {list(range(5))[::-2]}")
+    listsliceC()
+
     st_markline()
-    
     def listinitializedA(x, y=[]):           # y is only initialized once, dict is the same, not other variables
         y.append(x)
         return y
@@ -184,14 +167,21 @@ def py_listquizes():
         code_print(f"listinitializedA(i): {listinitializedA(i)}")
     st_code(code_print(''))
 
-    def listinitializedB(x, y=None):           # y is only initialized once, dict is the same, not other variables
+    st_markline()
+    def listinitializedB(x, y=None):           # y is only initialized once, dict is the same, not other variables   
         if y == None:
             y = []
         y.append(x)
         return y
     for i in range(1,4):
         code_print(f"listinitializedB(i): {listinitializedB(i)}")
-    st_code(code_print(''))   
+    st_code(code_print(''))  
+
+    def listindex():
+        st_markline()
+        x = [1,2,3]
+        st_code(f"x.index(3) + x.count(1): {x.index(3) + x.count(1)}") 
+    listindex()
 ### EndofCodeSection###
 
 def py_fstr():

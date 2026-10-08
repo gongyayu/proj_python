@@ -1,6 +1,6 @@
 import streamlit as st
 import json
-from py_mod import st_code, st_print, st_code,st_markline
+from py_mod import st_code, st_print, st_code,st_markline, code_print
 
 
 ### StartofFunc###
@@ -72,29 +72,61 @@ def py_list_operate():
     # double a list
     st_code(f"listA * 2: {listA * 2} \
             \nlistA + listB: {listA + listB}")
+### EndofCodeSection###
 
-    del mylistA[0]
-    st_code(f"del mylistA[0]: {mylistA}")
-    st_code(f"mylistA.count('john'): {mylistA.count('john')}")
+def py_list_attributes():
+    listA = ['abcd', 786, 2.23, 'john', 70.2, 'apple', 'lettuce', 4, 'join',4,]
 
-    mylistA.append('Tom')
-    st_code(
-        f"mylistA.append('Tom): {mylistA},'Tom' in mylistA: {'Tom' in mylistA}")
+    def pylistindex():
+        st_code(f'listA.index(786): {listA.index(786)}')
+    pylistindex()
+    st_markline()
 
-    st_code(f"mylistA.append((1,2)): {mylistA}")
-    st_code(f"mylistA.extend((1,2)): {mylistA}")
-    st_code(f"mylistA.insert(3,'example'): {mylistA}")
+    def pylistcount():
+        st_code(f"listA.count(4): {listA.count(4)}")
+    pylistcount()
+    st_markline()
 
-    st_code(f"mylistA.pop(2): {mylistA.pop(2)} -> {mylistA}")
-    st_code(
-        f"mylistA.remove('apple'): {mylistA.remove('apple')} -> {mylistA}")
+    def pylistappend():
+        code_print(f"'Tom' in listA: {'Tom' in listA}")
+        code_print(f" listA.append('Tom'): {listA.append('Tom')}")
+        st_code(f" {code_print(f'')} 'Tom' in listA: {'Tom' in listA}")
+    pylistappend()
+    
+    st_code(f"listA.append((1,2)): {listA}")
+    st_markline()   
 
-    del mylistA
-    try:
-        st_code(f"del mylistA: {mylistA}")
-    except Exception as e:
-        st_code(f"del mylistA -> Error: {str(e)}")
-    st_print(st_code(f''))
+    def pylistextend():
+        st_code(f"listA.extend((1,2)): {listA}")
+    pylistextend()
+    st_markline()
+
+    def pylistinsert():
+        st_code(f"listA.insert(3,'example'): {listA}")
+    pylistinsert()
+    st_markline()
+
+    def pylistpop():
+        st_code(f"listA.pop(2): {listA.pop(2)} -> {listA}")
+    pylistpop()
+    st_markline()
+
+    def pylistremove():
+        st_code(f"listA.remove('apple'): {listA.remove('apple')} -> {listA}")
+    pylistremove()
+    st_markline()
+
+    def pylistdelete():
+        nonlocal listA
+        del listA[0]
+        st_code(f"after del listA[0]: {listA}")
+
+        del listA
+        try:
+            st_code(f"del listA: {listA}")
+        except Exception as e:
+            st_code(f"del listA -> Error: {str(e)}")
+    pylistdelete()
 ### EndofCodeSection###
 
 

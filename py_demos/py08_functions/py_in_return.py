@@ -1,5 +1,5 @@
 import streamlit as st
-from py_mod import line_print, st_code, st_print
+from py_mod import line_print,st_print, code_print, st_code, st_markline
 
 ### StartofFunc###
 
@@ -93,4 +93,14 @@ def py_input_bystar():
         st_code(
             f"user: {user}, user('id'): {user['id']}, user['name']: {user['name']}")
     save_user(id=1, name="admin")
+### EndofCodeSection###
+
+def py_quizzes():
+    def quiz1(x, y=[]):
+        # default value only assigned at the first time
+        y.append(x)
+        return y
+    code_print(f"quiz1(1): {quiz1(1)}")
+    code_print(f"quiz1(2): {quiz1(2)}")
+    st_code(code_print(f''))
 ### EndofCodeSection###
