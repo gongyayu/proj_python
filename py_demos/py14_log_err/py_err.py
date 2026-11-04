@@ -1,10 +1,7 @@
 from py_mod import line_print,st_print,st_code,code_print, st_markline
+import streamlit as st
 
 ### StartofFunc###
-
-
-### EndofCodeSection###
-
 def py_tryA():
     tinydict = {}
     # delete the entire dictionary
@@ -52,3 +49,20 @@ def py_tryD():
         st_code(f"Error: {ValueError}")
 ### EndofCodeSection###
 
+def py_raise_try():
+    width = 1
+    def check_width():
+        if width <= 2:
+            raise Exception("Width must be greater than 2.")
+    
+    try:
+        check_width()
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+### EndofCodeSection###
+
+def py_assrt():
+    ages = [26,34,92]
+    assert ages[0] > ages[-1], "ages list should be ascending order"
+    st_code(f"No Error !")
+### EndofCodeSection###

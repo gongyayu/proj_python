@@ -1,6 +1,6 @@
 import streamlit as st
 import re
-from py_mod import line_print, st_print, parsing_input,st_code,st_markline
+from py_mod import line_print, st_print, parsing_input,code_print,st_code,st_markline
 
 ### StartofFunc###
 
@@ -93,25 +93,44 @@ def py_matchIPv4():
 def py_match_pattern():
     import re
 
-    timeList = [
-        '3hours5minutes12seconds',
-        '34minutes44seconds',
-        '4hours32minutes32seconds',
-        '2hours',
-        '9minutes',
-        '45seconds',
-    ]
+    def pattern_matchA():
+        timeList = [
+            '3hours5minutes12seconds',
+            '34minutes44seconds',
+            '4hours32minutes32seconds',
+            '2hours',
+            '9minutes',
+            '45seconds',
+        ]
 
-    pattern = re.compile(r'(?:(\d+)hours)?(?:(\d+)minutes)?(?:(\d+)seconds)?')
+        pattern = re.compile(r'(?:(\d+)hours)?(?:(\d+)minutes)?(?:(\d+)seconds)?')
 
-    match = pattern.match(timeList[0])
+        match = pattern.match(timeList[0])
 
-    for timeslot in timeList:
-        match = pattern.match(timeslot)
-        if match:
-            hours, minutes, seconds = match.groups()
-            st.code(
-                f'Parsed {timeslot}: hours={hours}, minutes={minutes}, seconds={seconds}')
+        for timeslot in timeList:
+            match = pattern.match(timeslot)
+            if match:
+                hours, minutes, seconds = match.groups()
+                code_print(
+                    f'Parsed {timeslot}: hours={hours}, minutes={minutes}, seconds={seconds}')
+        st_code(code_print(f''))
+    pattern_matchA()
+    
+    st_markline()
+    def pattern_matchB():
+        code_print(f"\n1. Compile a case-insensitive regex:")
+        pattern = "connection pool"
+        rx = re.compile(pattern, re.IGNORECASE)
+        code_print(f"{rx}")
+
+        r = rx.search("This strings contains connection pool")
+        if r:
+            code_print(f"Found a match!")
+        r = rx.search("This strings does not contain our regex pattern")
+        if not r:
+            code_print(f"No match found!")
+        st_code(code_print(f''))
+    pattern_matchB()
 ### EndofCodeSection###
 
 def py_match_demo1():
@@ -141,4 +160,13 @@ def py_match_demo1():
                 st_code(f"'content' in delta: {'content' in delta}")
             st_markline()
 
+### EndofCodeSection###
+
+def pymatch():
+    if not re.fullmatch(r"[0-9+\-*/(). ]+", expression):
+        return "Error: expression contains invalid characters."
+    try:
+        return str(eval(expression, {"__builtins__": {}}, {}))
+    except Exception as e:
+        return f"Error: {e}"
 ### EndofCodeSection###

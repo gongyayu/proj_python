@@ -7,6 +7,7 @@ import importlib
 # for py99_files
 #
 import pathlib
+from pathlib import Path
 from datetime import datetime, timezone,timedelta
 import time
 
@@ -18,6 +19,10 @@ _st = True
 outlines = codelines = ''
 py_proj_path = '/Users/gongya/Programming/mac_python/proj_python/py_demos/'
 
+datadir = (Path(__file__).parent.parent.parent / 'data/in/').resolve()
+outputdir = (Path(__file__).parent.parent.parent / 'data/out/').resolve()
+dbdir = (Path(__file__).parent.parent.parent / 'data/db/').resolve()
+
 # AI
 llm_model = 'gpt-oss:latest'
 ollama_model = 'llama3.1:8b'
@@ -27,7 +32,8 @@ ollama_URL = "http://localhost:11434/api/chat"
 # files stats
 #
 startfrom = {
-    'AI':['/Volumes/192.168.1.57/AI/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/AI_Indexes.md'],
+    #'AI':['/Volumes/192.168.1.57/AI/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/AI_Indexes.md'],
+    'AI':['/Volumes/My Passport/AI/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/AI_Indexes.md'],
     'proj_python':['/Users/gongya/Programming/mac_python/proj_python/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/Python_Indexes.md'],
     'uv_python':['/Users/gongya/Programming/uv_python/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/Pythonuv_Indexes.md'],
     'proj_ai':['/Users/gongya/Programming/mac_python/proj_ai/','/Users/gongya/obsidian/gyu-obsidian/6. References/Indexes/PythonAI_Indexes.md'],
@@ -43,6 +49,17 @@ bk_prefix = {
     '/Users/gongya/Programming/uv_python/':'/Volumes/192.168.1.57/MAC_M5/latest/uv_python/',
     '/Users/gongya/obsidian/':'/Volumes/192.168.1.57/MAC_M5/latest/obsidian/'
 }
+
+DOCUMENTS = [
+        "The Eiffel Tower is located in Paris, France. It was completed in 1889.",
+        "Python is a high-level programming language created by Guido van Rossum in 1991.",
+        "The Great Wall of China is over 13,000 miles long and was built over many centuries.",
+        "Transformers are a neural network architecture introduced in the paper 'Attention Is All You Need' (2017).",
+        "RAG stands for Retrieval-Augmented Generation, combining a retriever with a language model.",
+        "The capital of Japan is Tokyo, which is one of the most populous cities in the world.",
+        "Photosynthesis is the process by which plants convert sunlight into chemical energy.",
+        "The human genome contains approximately 3 billion base pairs of DNA.",
+]
 
 excludedirs = ['__pycache__','pycache']
 days = 100

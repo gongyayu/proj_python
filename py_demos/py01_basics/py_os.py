@@ -2,7 +2,7 @@
 import streamlit as st
 import os
 import pathlib
-from py_mod import line_print, st_print, st_code
+from py_mod import line_print, st_print, st_code, code_print, st_markline
 
 ### StartofFunc###
 ### Section: OS and Memory ###
@@ -176,62 +176,83 @@ def py_memory_demo1():
 ### EndofCodeSection###
 
 
-def py_memory_copy():
-    import copy
-# reference the original object
+def py_memory_dup():
+    #
+    #   reference the original object
+    #
+    code_print(f"reference the original object: ---")
     li1 = [['a'], ['b'], ['c']]
-    line_print(f"li1 -> memory location: {id(li1)}")
+    code_print(f"li1 -> memory location: {id(li1)}")
     li2 = li1
-    line_print(f"li2 -> memory location: {id(li2)}")
+    code_print(f"li2 -> memory location: {id(li2)}")
     li1.append(['d'])
-    line_print(
+    code_print(
         f"li1 ({li1}) -> memory location: {id(li1)}, li2 ({li2}) -> memory location: {id(li2)}")
+    st_code(f"{code_print(f'')}")
+### EndofCodeSection###
 
+def py_memory_shallowcopy():
+    import copy
     #
     # Create a shallow copy of the original
     #
-    line_print(f'<br>shallow copy')
+    code_print(f"create a shallow copy of the original (opt 1): ---")
     li3 = [['a'], ['b'], ['c']]
-    line_print(f"li3 -> memory location: {id(li3)}")
-    # vs. li4 = li3
-    li4 = list(li3)
-    line_print(f"li4 -> memory location: {id(li4)}")
+    li4 = list(li3)                                               # vs. li4 = li3
+    code_print(f"li3: {id(li3)} - {li3}, li4: {id(li4)} - {li4}")
     li3.append([4])
-    line_print(f"li3 ({li3}) -> memory location: {id(li3)}")
-    line_print(f"li4 ({li4}) -> memory location: {id(li4)}")
+    code_print(f"li3: {id(li3)} - {li3}, li4: {id(li4)} - {li4}")
+    li3[0][0] = ['3']
+    code_print(f"li3: {id(li3)} - {li3}, li4: {id(li4)} - {li4}")
+    li4[1][0] = ['4']
+    code_print(f"li3: {id(li3)} - {li3}, li4: {id(li4)} - {li4}")
 
-    li4[0][0] = ['X']
-    line_print(f"li3 ({li3}) -> memory location: {id(li3)}")
-    line_print(f"li4 ({li4}) -> memory location: {id(li4)}")
     #
     # via copy routine
     #
-    original = [[1, 2, 3], [4, 5, 6]]
-    shallow = copy.copy(original)
-    line_print(f"original {original} -> memory location: {id(original)}")
-    line_print(f"shallow {shallow} -> memory location: {id(shallow)}")
+    code_print(f"\ncreate a shallow copy of the original (opt 1): ---")
+    original = ['a',[1, 2, 3], [4, 5, 6]]
+    #shallow = copy.copy(original)
+    shallow = original.copy()
+    code_print(f"original: {id(original)} - {original}, shallow: {id(shallow)} - {shallow}")
 
+    original.append(['a', 'b', 'c'])                                                           # the outer list not affect each other
     shallow.append([7, 8, 9])
-    original.append(['a', 'b', 'c'])
-    shallow[0][0] = ['a']
-    original[0][1] = ['b']
-    line_print(f"original {original} -> memory location: {id(original)}")
-    line_print(f"shallow {shallow} -> memory location: {id(shallow)}")
+    code_print(f"original: {id(original)} - {original}, shallow: {id(shallow)} - {shallow}")
 
-    line_print(f"<br>Create a deep copy")
+    original[1][1] = ['b']                                                                     # the inner list affects each other
+    code_print(f"original: {id(original)} - {original}, shallow: {id(shallow)} - {shallow}")
+    shallow[1][0] = ['a']
+    code_print(f"original: {id(original)} - {original}, shallow: {id(shallow)} - {shallow}")
+
+    original[0] = ['x']                                                                     # the inner list affects each other
+    code_print(f"original: {id(original)} - {original}, shallow: {id(shallow)} - {shallow}")
+    shallow[0] = ['y']
+    code_print(f"original: {id(original)} - {original}, shallow: {id(shallow)} - {shallow}")
+   
+    st_code(f"{code_print(f'')}")
+
+    def quiz_1():
+        a = [1,2]
+        b = a
+        c = a.copy()
+        a[0] = 99
+        st_code(f"a: {a}, b: {b}, c: {c}")
+    quiz_1()
+### EndofCodeSection###
+
+def py_memory_deepcopy():
+    import copy
     li5 = [['a'], ['b'], ['c']]
     li6 = copy.deepcopy(li5)
-    line_print(f"li5 ({li5}) -> memory location: {id(li5)}")
-    line_print(f"li6 ({li6}) -> memory location: {id(li6)}")
+    code_print(f"li5: {id(li5)} - {li5}, li6: {id(li6)} - {li6}")
 
     li5.append([4])
-    line_print(f"li5 ({li5}) -> memory location: {id(li5)}")
-    # top-level
-    line_print(f"li6 ({li6}) -> memory location: {id(li6)}")
+    code_print(f"li5: {id(li5)} - {li5}, li6: {id(li6)} - {li6}")
+
     # nested
     li5[0][0] = ['X']
     li6[0][0] = ['Y']
-    line_print(f"li5 ({li5}) -> memory location: {id(li5)}")
-    line_print(f"li6 ({li6}) -> memory location: {id(li6)}")
-    st_print(line_print(''))
+    code_print(f"li5: {id(li5)} - {li5}, li6: {id(li6)} - {li6}")
+    st_code(f"{code_print(f'')}")
 ### EndofCodeSection###

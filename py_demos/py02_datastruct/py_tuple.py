@@ -49,6 +49,12 @@ def py_tuple_quizzes():
             st_code(f"Error: {str(e)}")
     quiz1()
 
+    st_markline()
+    def quiz2():
+        x = (1)
+        y = (1,)
+        st_code(f"type(x): {type(x)}, type(y): {type(y)}")
+    quiz2()
 ### EndofCodeSection###
 
 

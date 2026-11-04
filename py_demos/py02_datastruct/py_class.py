@@ -325,3 +325,12 @@ def py_class_quiz1():
 
     print("findished")
 ### EndofCodeSection###
+
+def py_classmethod():
+    class A:
+        x = 2
+        @classmethod
+        def fn(cls):
+            return cls.x
+    st_code(f"A.fn(): {A.fn()}")
+### EndofCodeSection###

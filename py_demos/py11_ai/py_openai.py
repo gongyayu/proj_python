@@ -40,7 +40,7 @@ def pyopenai_chat():
 
 
 def pyopenai_agent():
-    def openai_agent():
+    def openai_agentA():
         import os
         from dotenv import load_dotenv
         from langchain_openai import ChatOpenAI
@@ -81,4 +81,35 @@ def pyopenai_agent():
                 {"messages": [{"role": "user", "content": question}]}
             )
             print(f"\nthe final answer: {result['messages'][-1].contnent}")
+
+    def openai_agentB():
+        # initiate large language model (temperature = 0)
+        llm = ChatOpenAI(temperature=0)
+
+        # fetch the prompt from the prompt hub
+        prompt = hub.pull("hwchase17/openai-functions-agent")
+
+        # create the tools
+        @tool(response_format="content_and_artifact")
+        def retrieve(query: str):
+            """Retrieve information related to a query."""
+            retrieved_docs = vector_store.similarity_search(query, k=2)
+            serialized = "\n\n".join(
+                (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
+                for doc in retrieved_docs
+            )
+            return serialized, retrieved_docs
+
+        # combine the tools and provide to the llm
+        tools = [retrieve]
+        agent = create_tool_calling_agent(llm, tools, prompt)
+
+        # create the agent executor
+        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+        # invoke the agent
+        response = agent_executor.invoke({"input": "why is agentic rag better than naive rag?"})
+
+        # put the result on the screen
+        print(response["output"]) 
 ### EndofCodeSection###

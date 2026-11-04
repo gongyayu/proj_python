@@ -149,6 +149,39 @@ def py_list_sorting():
     st_print(st_code(f''))
 ### EndofCodeSection###
 
+def py_find_duplicates():
+    def find_duplucatesA():
+        # Given lists
+        list1 = [1, 2, 3, 4, 5]
+        list2 = [4, 5, 6, 7, 8]
+
+        # Combine the lists into a set (removing duplicates within each list)
+        set1 = set(list1)
+        set2 = set(list2)
+
+        # Find and print duplicates (elements that are in both sets)
+        duplicates = set1 & set2
+
+        # Print duplicates
+        st_code(f"Duplicates:, {duplicates}")
+    find_duplucatesA()
+
+    def find_duplicatesB():
+        # Given lists
+        list1 = [1, 2, 3, 4, 5]
+        list2 = [4, 5, 6, 7, 8]
+
+        # Combine the lists
+        combined_list = list1 + list2
+
+        # Find and print duplicates
+        duplicates = [element for element in combined_list if combined_list.count(element) > 1]
+
+       # Print duplicates
+        st_code(f"Duplicates: {duplicates}")
+    find_duplicatesB()
+### EndofCodeSection###
+
 
 def py_list_remove_duplicated_listitems():
     st_code(f"pylist_remove_duplicated_listItem() {'-' * 30}")

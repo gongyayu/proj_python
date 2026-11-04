@@ -121,16 +121,58 @@ def py_any():
 
 
 def py_join():
-    def pyjoin():
+    def pyjoinA():
         words = ["Hello", "World", "Python"]
         result = " ".join(words)
-        st_code(f"result: {result}")
-    pyjoin()
-    st_markline()
+        st_code(f"pyjoinA():\nresult: {result}")
+    pyjoinA()
+
+    def pyjoinB():
+            retrieved = [('Python is a high-level programming language created by Guido van Rossum in 1991.', 0.746315062046051), 
+                         ('RAG stands for Retrieval-Augmented Generation, combining a retriever with a language model.', 0.1926918625831604),
+                        ]
+            context = "\n".join(f"- {doc}" for doc, _ in retrieved)
+            st.code(f"pyjoinB():\n{context}")
+    pyjoinB()
     
     def pystrjoin():
         s1 = "hello"
         s2 = '-'.join(s1)
-        st_code(F"s2: {s2}")
+        st_code(f"pyjoinC():\ns2: {s2}")
     pystrjoin()
+
+    
 ### EndofCodeSection###
+
+def py_repr():
+    # the repr() function is a built-in function that returns a string representation of an object. This string is often used for debugging and logging purposes, 
+    # and it's also used by the print() function when you use the !r or !R
+    text = "Hello\nWorld"
+
+    text = "Hello\nWorld"
+
+    code_print(f"str(text): {str(text)}")
+    # Output:
+    # Hello
+    # World
+    code_print(f"repr(text): {repr(text)}")
+    # Output: 'Hello\nWorld'
+    
+    code_print(f"{'-' * 30}")
+    class Person:
+        def __init__(self, name, age):
+            self.name = name
+            self.age = age
+
+        def __repr__(self):
+            return f"Person(name={self.name!r}, age={self.age!r})"
+
+    p = Person("Alice", 30)
+    code_print(f"repr(p): {repr(p)}")
+    # Output: Person(name='Alice', age=30)
+    st_code(code_print(f''))
+### EndofCodeSection###
+
+
+
+
